@@ -1,0 +1,3001 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Saloon — A House of Refined Beverages</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Cinzel+Decorative:wght@400;700;900&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500&family=Italiana&family=Special+Elite&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg-deep: #100a06;
+        --bg-stage: #1c130b;
+        --paper: #ead7b1;
+        --paper-aged: #cdb585;
+        --paper-shadow: #7a6235;
+        --ink: #2a1a0c;
+        --ink-soft: #4d3621;
+        --gold: #c9a14a;
+        --gold-bright: #ecc972;
+        --gold-deep: #8b6914;
+        --burgundy: #7a2a32;
+        --burgundy-deep: #3c1518;
+        --coffee: #4b2a14;
+        --steam: #f4e8d0;
+        --mythic-1: #c9a8ff;
+        --mythic-2: #9be3ff;
+        --mythic-3: #ffd6e0;
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      html,
+      body {
+        height: 100%;
+        width: 100%;
+        overflow: hidden;
+      }
+
+      body {
+        font-family: "Cormorant Garamond", "EB Garamond", Georgia, serif;
+        color: var(--paper);
+        background:
+          radial-gradient(
+            ellipse at 18% 12%,
+            rgba(236, 201, 114, 0.1),
+            transparent 55%
+          ),
+          radial-gradient(
+            ellipse at 82% 88%,
+            rgba(122, 42, 50, 0.18),
+            transparent 55%
+          ),
+          radial-gradient(ellipse at 50% 50%, #221710 0%, #0a0603 100%);
+        position: relative;
+      }
+
+      body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        z-index: 60;
+        background: radial-gradient(
+          ellipse at center,
+          transparent 38%,
+          rgba(0, 0, 0, 0.78) 100%
+        );
+      }
+      body::after {
+        content: "";
+        position: fixed;
+        inset: -50%;
+        pointer-events: none;
+        z-index: 65;
+        opacity: 0.08;
+        mix-blend-mode: overlay;
+        background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.95 0 0 0 0 0.85 0 0 0 0 0.6 0 0 0 0.5 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+        animation: grain 1.2s steps(4) infinite;
+      }
+      @keyframes grain {
+        0% {
+          transform: translate(0, 0);
+        }
+        25% {
+          transform: translate(-3%, 2%);
+        }
+        50% {
+          transform: translate(2%, -2%);
+        }
+        75% {
+          transform: translate(-1%, -3%);
+        }
+        100% {
+          transform: translate(0, 0);
+        }
+      }
+
+      /* ====== deck & slides ====== */
+      .deck {
+        position: relative;
+        width: 100vw;
+        height: 100vh;
+        overflow: hidden;
+        z-index: 1;
+      }
+      .slide {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
+        padding: 6vh 5vw 14vh;
+        opacity: 0;
+        pointer-events: none;
+        overflow-y: auto;
+        transform: translateY(24px) scale(0.985);
+        transition:
+          opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1),
+          transform 0.9s cubic-bezier(0.4, 0, 0.2, 1),
+          filter 0.6s ease;
+        filter: blur(8px);
+      }
+      .slide.active {
+        opacity: 1;
+        pointer-events: auto;
+        transform: translateY(0) scale(1);
+        filter: blur(0);
+      }
+      .slide.leaving {
+        opacity: 0;
+        transform: translateY(-22px) scale(1.01);
+        filter: blur(6px);
+      }
+      .slide.welcome {
+        justify-content: center;
+      }
+      .slide.summary {
+        justify-content: center;
+        padding-bottom: 6vh;
+      }
+
+      .slide::-webkit-scrollbar {
+        width: 6px;
+      }
+      .slide::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      .slide::-webkit-scrollbar-thumb {
+        background: rgba(201, 161, 74, 0.3);
+        border-radius: 3px;
+      }
+
+      /* ====== ornaments ====== */
+      .ornament {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 14px;
+        color: var(--gold);
+        font-family: "Cinzel", serif;
+        letter-spacing: 0.4em;
+        flex-wrap: wrap;
+      }
+      .ornament .line {
+        height: 1px;
+        width: 90px;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          var(--gold) 50%,
+          transparent
+        );
+      }
+      .ornament .diamond {
+        width: 6px;
+        height: 6px;
+        background: var(--gold);
+        transform: rotate(45deg);
+        box-shadow: 0 0 12px var(--gold-bright);
+      }
+      .ornament .label {
+        font-size: 0.78rem;
+        text-transform: uppercase;
+        white-space: nowrap;
+      }
+
+      .corner-frame {
+        position: absolute;
+        width: 90px;
+        height: 90px;
+        opacity: 0.55;
+        color: var(--gold);
+        z-index: 2;
+        pointer-events: none;
+      }
+      .corner-frame.tl {
+        top: 30px;
+        left: 30px;
+      }
+      .corner-frame.tr {
+        top: 30px;
+        right: 30px;
+        transform: scaleX(-1);
+      }
+      .corner-frame.bl {
+        bottom: 30px;
+        left: 30px;
+        transform: scaleY(-1);
+      }
+      .corner-frame.br {
+        bottom: 30px;
+        right: 30px;
+        transform: scale(-1, -1);
+      }
+
+      /* ====== typography ====== */
+      h2.title {
+        font-family: "Italiana", serif;
+        font-size: clamp(2.2rem, 4.2vw, 3.6rem);
+        color: var(--paper);
+        text-align: center;
+        font-weight: 400;
+        margin: 18px 0 6px;
+        letter-spacing: 0.01em;
+      }
+      .subtitle {
+        font-family: "Cormorant Garamond", serif;
+        font-style: italic;
+        font-size: clamp(1.05rem, 1.4vw, 1.3rem);
+        color: var(--paper-aged);
+        text-align: center;
+        max-width: 660px;
+        margin: 0 auto 30px;
+        line-height: 1.45;
+      }
+
+      /* ====== welcome ====== */
+      .welcome .marquee {
+        font-family: "Cinzel Decorative", serif;
+        font-weight: 900;
+        font-size: clamp(4.5rem, 15vw, 13rem);
+        line-height: 0.85;
+        background: linear-gradient(
+          180deg,
+          #f7df9b 0%,
+          #c9a14a 45%,
+          #8b6914 80%,
+          #5a4310 100%
+        );
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        letter-spacing: 0.05em;
+        filter: drop-shadow(0 4px 18px rgba(0, 0, 0, 0.6));
+        text-align: center;
+        position: relative;
+      }
+      .welcome .marquee::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+          180deg,
+          transparent 50%,
+          rgba(0, 0, 0, 0.18) 50%
+        );
+        background-size: 100% 4px;
+        mix-blend-mode: overlay;
+        pointer-events: none;
+      }
+      .welcome .est {
+        font-family: "Cinzel", serif;
+        letter-spacing: 0.6em;
+        color: var(--gold);
+        font-size: 0.8rem;
+        margin-top: 12px;
+      }
+      .welcome .tagline {
+        font-family: "Cormorant Garamond", serif;
+        font-style: italic;
+        color: var(--paper-aged);
+        font-size: 1.35rem;
+        margin: 20px 0 38px;
+        text-align: center;
+      }
+
+      .cup {
+        position: relative;
+        width: 120px;
+        height: 120px;
+        margin: 14px auto 8px;
+      }
+      .cup svg {
+        width: 100%;
+        height: 100%;
+        color: var(--gold);
+      }
+      .steam {
+        position: absolute;
+        left: 50%;
+        top: -10px;
+        transform: translateX(-50%);
+        display: flex;
+        gap: 6px;
+      }
+      .steam span {
+        display: block;
+        width: 6px;
+        height: 42px;
+        background: linear-gradient(
+          180deg,
+          transparent,
+          rgba(244, 232, 208, 0.55),
+          transparent
+        );
+        border-radius: 50%;
+        filter: blur(2px);
+        animation: rise 3.2s ease-in-out infinite;
+      }
+      .steam span:nth-child(2) {
+        animation-delay: 0.4s;
+      }
+      .steam span:nth-child(3) {
+        animation-delay: 0.8s;
+      }
+      @keyframes rise {
+        0% {
+          opacity: 0;
+          transform: translateY(8px) scaleY(0.6);
+        }
+        30% {
+          opacity: 0.85;
+        }
+        100% {
+          opacity: 0;
+          transform: translateY(-44px) scaleY(1.2);
+        }
+      }
+
+      /* ====== buttons ====== */
+      .btn {
+        --bd: var(--gold);
+        cursor: pointer;
+        border: none;
+        background: transparent;
+        font-family: "Cinzel", serif;
+        letter-spacing: 0.32em;
+        text-transform: uppercase;
+        color: var(--gold-bright);
+        font-size: 0.82rem;
+        padding: 16px 34px;
+        position: relative;
+        transition:
+          color 0.3s ease,
+          letter-spacing 0.3s ease;
+      }
+      .btn::before,
+      .btn::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        right: 0;
+        height: 1px;
+        background: var(--bd);
+        transition:
+          transform 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+          background 0.3s;
+      }
+      .btn::before {
+        top: 0;
+      }
+      .btn::after {
+        bottom: 0;
+      }
+      .btn .corners {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+      }
+      .btn .corners::before,
+      .btn .corners::after {
+        content: "";
+        position: absolute;
+        width: 10px;
+        height: 10px;
+        border: 1px solid var(--bd);
+      }
+      .btn .corners::before {
+        top: -1px;
+        left: -1px;
+        border-right: none;
+        border-bottom: none;
+      }
+      .btn .corners::after {
+        bottom: -1px;
+        right: -1px;
+        border-left: none;
+        border-top: none;
+      }
+      .btn:hover {
+        color: #fff;
+        letter-spacing: 0.42em;
+      }
+      .btn:hover::before,
+      .btn:hover::after {
+        background: var(--gold-bright);
+        box-shadow: 0 0 14px var(--gold-bright);
+      }
+      .btn.primary {
+        background: linear-gradient(
+          180deg,
+          rgba(201, 161, 74, 0.14),
+          rgba(201, 161, 74, 0.04)
+        );
+      }
+      .btn.ghost {
+        color: var(--paper-aged);
+        --bd: rgba(201, 161, 74, 0.4);
+      }
+      .btn:disabled {
+        opacity: 0.3;
+        cursor: not-allowed;
+        pointer-events: none;
+      }
+
+      /* ====== option cards ====== */
+      .options {
+        display: grid;
+        gap: 22px;
+        width: 100%;
+        max-width: 1280px;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        margin: 6px 0 30px;
+      }
+      .options.three {
+        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+        max-width: 980px;
+      }
+      .options.dense {
+        grid-template-columns: repeat(auto-fit, minmax(195px, 1fr));
+      }
+
+      .card {
+        position: relative;
+        cursor: pointer;
+        background:
+          linear-gradient(
+            180deg,
+            rgba(234, 215, 177, 0.06),
+            rgba(234, 215, 177, 0.02)
+          ),
+          repeating-linear-gradient(
+            135deg,
+            transparent 0 12px,
+            rgba(201, 161, 74, 0.025) 12px 13px
+          );
+        border: 1px solid rgba(201, 161, 74, 0.28);
+        padding: 28px 18px 20px;
+        transition:
+          transform 0.45s cubic-bezier(0.2, 0.8, 0.2, 1),
+          border-color 0.35s,
+          background 0.35s,
+          box-shadow 0.35s;
+        text-align: center;
+        overflow: hidden;
+        isolation: isolate;
+      }
+      .card::before {
+        content: "";
+        position: absolute;
+        inset: 6px;
+        border: 1px solid rgba(201, 161, 74, 0.18);
+        pointer-events: none;
+      }
+      .card::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        opacity: 0;
+        background: radial-gradient(
+          ellipse at top,
+          rgba(236, 201, 114, 0.18),
+          transparent 60%
+        );
+        transition: opacity 0.4s;
+        pointer-events: none;
+        z-index: -1;
+      }
+      .card .roman {
+        font-family: "Cinzel", serif;
+        color: var(--gold);
+        font-size: 0.7rem;
+        letter-spacing: 0.5em;
+        margin-bottom: 12px;
+        text-transform: uppercase;
+      }
+      .card .name {
+        font-family: "Italiana", serif;
+        font-size: 1.5rem;
+        color: var(--paper);
+        line-height: 1.1;
+        margin-bottom: 6px;
+      }
+      .card .divider {
+        width: 42px;
+        height: 1px;
+        background: var(--gold);
+        margin: 8px auto;
+        position: relative;
+      }
+      .card .divider::before {
+        content: "❖";
+        position: absolute;
+        left: 50%;
+        top: -9px;
+        transform: translateX(-50%);
+        color: var(--gold);
+        background: #160d07;
+        padding: 0 6px;
+        font-size: 0.7rem;
+      }
+      .card .desc {
+        font-family: "Cormorant Garamond", serif;
+        font-style: italic;
+        color: var(--paper-aged);
+        font-size: 0.96rem;
+        line-height: 1.42;
+        min-height: 3em;
+        margin: 0 4px;
+      }
+      .card .price {
+        margin-top: 12px;
+        font-family: "Special Elite", monospace;
+        color: var(--gold-bright);
+        font-size: 0.92rem;
+        letter-spacing: 0.04em;
+      }
+      .card:hover {
+        transform: translateY(-6px);
+        border-color: var(--gold-bright);
+        box-shadow:
+          0 18px 40px rgba(0, 0, 0, 0.55),
+          0 0 0 1px rgba(236, 201, 114, 0.15) inset;
+      }
+      .card:hover::after {
+        opacity: 1;
+      }
+      .card.selected {
+        border-color: var(--gold-bright);
+        background:
+          linear-gradient(
+            180deg,
+            rgba(236, 201, 114, 0.18),
+            rgba(201, 161, 74, 0.06)
+          ),
+          repeating-linear-gradient(
+            135deg,
+            transparent 0 12px,
+            rgba(201, 161, 74, 0.05) 12px 13px
+          );
+        box-shadow:
+          0 0 0 1px var(--gold-bright) inset,
+          0 16px 38px rgba(0, 0, 0, 0.6);
+      }
+      .card.selected::before {
+        border-color: var(--gold-bright);
+      }
+      .card.selected .name {
+        color: #fff;
+      }
+
+      /* premium "Victoria" tier */
+      .card.premium {
+        border-color: var(--gold-bright);
+        background:
+          linear-gradient(
+            180deg,
+            rgba(236, 201, 114, 0.1),
+            rgba(122, 42, 50, 0.06)
+          ),
+          repeating-linear-gradient(
+            135deg,
+            transparent 0 10px,
+            rgba(236, 201, 114, 0.04) 10px 11px
+          );
+        box-shadow: inset 0 0 28px rgba(236, 201, 114, 0.08);
+      }
+      .card.premium::before {
+        border-color: var(--gold-bright);
+        inset: 5px;
+      }
+      .card.premium .name {
+        background: linear-gradient(
+          180deg,
+          #fff5d4 0%,
+          #ecc972 50%,
+          #8b6914 100%
+        );
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        font-weight: 500;
+      }
+      .card.premium .divider {
+        background: var(--gold-bright);
+        box-shadow: 0 0 8px var(--gold-bright);
+      }
+      .card.premium .badge {
+        position: absolute;
+        top: -1px;
+        right: -1px;
+        background: linear-gradient(135deg, #ecc972, #8b6914);
+        color: #160d07;
+        font-family: "Cinzel", serif;
+        font-weight: 700;
+        letter-spacing: 0.22em;
+        font-size: 0.55rem;
+        padding: 5px 10px;
+        text-transform: uppercase;
+        clip-path: polygon(
+          0 0,
+          100% 0,
+          100% 100%,
+          14px 100%,
+          0 calc(100% - 14px)
+        );
+        z-index: 2;
+      }
+      .card.premium .badge::before {
+        content: "✦  ";
+      }
+      .card.premium:hover {
+        box-shadow:
+          0 18px 50px rgba(0, 0, 0, 0.6),
+          0 0 24px rgba(236, 201, 114, 0.25),
+          inset 0 0 28px rgba(236, 201, 114, 0.12);
+        transform: translateY(-8px);
+      }
+
+      /* mythic tier (rare, even rarer than premium) */
+      .card.mythic {
+        border-color: transparent;
+        background:
+          linear-gradient(
+            180deg,
+            rgba(201, 168, 255, 0.1),
+            rgba(155, 227, 255, 0.05) 50%,
+            rgba(255, 214, 224, 0.08)
+          ),
+          repeating-linear-gradient(
+            135deg,
+            transparent 0 10px,
+            rgba(201, 168, 255, 0.04) 10px 11px
+          );
+        box-shadow: inset 0 0 36px rgba(201, 168, 255, 0.12);
+        animation: mythicShimmer 5s ease-in-out infinite;
+      }
+      @keyframes mythicShimmer {
+        0%,
+        100% {
+          box-shadow: inset 0 0 36px rgba(201, 168, 255, 0.12);
+        }
+        50% {
+          box-shadow: inset 0 0 36px rgba(155, 227, 255, 0.18);
+        }
+      }
+      .card.mythic::before {
+        border: 1px solid;
+        border-image: linear-gradient(
+            135deg,
+            var(--mythic-1),
+            var(--mythic-2),
+            var(--mythic-3)
+          )
+          1;
+        inset: 5px;
+      }
+      .card.mythic .name {
+        background: linear-gradient(
+          90deg,
+          var(--mythic-1),
+          #fff,
+          var(--mythic-2),
+          var(--mythic-3)
+        );
+        background-size: 200% auto;
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        animation: mythicText 4s linear infinite;
+        font-weight: 500;
+      }
+      @keyframes mythicText {
+        0% {
+          background-position: 0% 50%;
+        }
+        100% {
+          background-position: 200% 50%;
+        }
+      }
+      .card.mythic .badge {
+        position: absolute;
+        top: -1px;
+        right: -1px;
+        background: linear-gradient(135deg, var(--mythic-1), var(--mythic-2));
+        color: #160d07;
+        font-family: "Cinzel", serif;
+        font-weight: 700;
+        letter-spacing: 0.22em;
+        font-size: 0.55rem;
+        padding: 5px 10px;
+        text-transform: uppercase;
+        clip-path: polygon(
+          0 0,
+          100% 0,
+          100% 100%,
+          14px 100%,
+          0 calc(100% - 14px)
+        );
+        z-index: 2;
+      }
+      .card.mythic .badge::before {
+        content: "✧  ";
+      }
+      .card.mythic .divider {
+        background: linear-gradient(90deg, var(--mythic-1), var(--mythic-2));
+        box-shadow: 0 0 8px var(--mythic-2);
+      }
+
+      /* multi-select chips */
+      .chips {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        justify-content: center;
+        margin: 6px auto 22px;
+        max-width: 980px;
+      }
+      .chip {
+        cursor: pointer;
+        padding: 12px 20px;
+        border: 1px solid rgba(201, 161, 74, 0.35);
+        font-family: "Cinzel", serif;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        font-size: 0.72rem;
+        color: var(--paper-aged);
+        transition: all 0.3s;
+        background: rgba(234, 215, 177, 0.02);
+        position: relative;
+      }
+      .chip .px {
+        color: var(--gold);
+        margin-left: 10px;
+        font-family: "Special Elite", monospace;
+        letter-spacing: 0.04em;
+      }
+      .chip:hover {
+        border-color: var(--gold-bright);
+        color: var(--paper);
+      }
+      .chip.on {
+        background: linear-gradient(
+          180deg,
+          rgba(236, 201, 114, 0.2),
+          rgba(201, 161, 74, 0.05)
+        );
+        border-color: var(--gold-bright);
+        color: #fff;
+        box-shadow: 0 0 0 1px var(--gold-bright) inset;
+      }
+      .chip.lux {
+        border-color: var(--gold-bright);
+        color: #ecc972;
+      }
+      .chip.lux::before {
+        content: "✦ ";
+        color: var(--gold-bright);
+      }
+      .chip.lux.on {
+        background: linear-gradient(
+          180deg,
+          rgba(236, 201, 114, 0.28),
+          rgba(122, 42, 50, 0.1)
+        );
+        color: #fff;
+      }
+
+      /* sugar dial */
+      .sugar {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 14px;
+        margin-bottom: 18px;
+      }
+      .sugar .lbl {
+        font-family: "Cinzel", serif;
+        letter-spacing: 0.4em;
+        color: var(--gold);
+        font-size: 0.7rem;
+        text-transform: uppercase;
+      }
+      .sugar-track {
+        position: relative;
+        display: flex;
+        gap: 10px;
+        align-items: flex-end;
+      }
+      .sugar-cube {
+        width: 38px;
+        height: 38px;
+        border: 1px solid rgba(201, 161, 74, 0.4);
+        cursor: pointer;
+        position: relative;
+        background: linear-gradient(
+          135deg,
+          rgba(234, 215, 177, 0.05),
+          rgba(234, 215, 177, 0.02)
+        );
+        transition: all 0.3s;
+      }
+      .sugar-cube::before {
+        content: "";
+        position: absolute;
+        inset: 6px;
+        border: 1px dashed rgba(201, 161, 74, 0.25);
+      }
+      .sugar-cube .num {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: "Cinzel", serif;
+        font-size: 0.75rem;
+        color: var(--paper-aged);
+      }
+      .sugar-cube.on {
+        background: linear-gradient(180deg, #f4e8d0, #d4bd92);
+        border-color: #f4e8d0;
+        box-shadow:
+          0 4px 14px rgba(244, 232, 208, 0.3),
+          0 0 0 1px #f4e8d0;
+      }
+      .sugar-cube.on .num {
+        color: var(--ink);
+      }
+      .sugar-cube:hover {
+        border-color: var(--gold-bright);
+      }
+      .sugar-readout {
+        font-family: "Italiana", serif;
+        font-size: 1.3rem;
+        color: var(--paper-aged);
+        font-style: italic;
+        text-align: center;
+      }
+
+      /* ====== nav footer ====== */
+      .nav-footer {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        padding: 16px 5vw 18px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 18px;
+        z-index: 30;
+        pointer-events: none;
+        background: linear-gradient(
+          180deg,
+          transparent 0%,
+          rgba(10, 6, 3, 0.85) 60%
+        );
+      }
+      .nav-footer > * {
+        pointer-events: auto;
+      }
+      .progress {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 14px;
+        font-family: "Cinzel", serif;
+        color: var(--paper-aged);
+        font-size: 0.68rem;
+        letter-spacing: 0.4em;
+        text-transform: uppercase;
+      }
+      .progress .dots {
+        display: flex;
+        gap: 8px;
+      }
+      .progress .dot {
+        width: 7px;
+        height: 7px;
+        border: 1px solid rgba(201, 161, 74, 0.5);
+        transform: rotate(45deg);
+        transition: all 0.35s;
+      }
+      .progress .dot.done {
+        background: var(--gold);
+        border-color: var(--gold-bright);
+        box-shadow: 0 0 8px var(--gold-bright);
+      }
+      .progress .dot.current {
+        background: var(--gold-bright);
+        border-color: var(--gold-bright);
+        box-shadow: 0 0 12px var(--gold-bright);
+        transform: rotate(45deg) scale(1.3);
+      }
+
+      .running-total {
+        font-family: "Special Elite", monospace;
+        color: var(--gold-bright);
+        font-size: 0.9rem;
+        letter-spacing: 0.06em;
+        padding: 8px 16px;
+        border: 1px solid rgba(201, 161, 74, 0.35);
+        background: rgba(0, 0, 0, 0.4);
+        min-width: 160px;
+        text-align: center;
+      }
+      .running-total .lbl {
+        color: var(--paper-aged);
+        font-size: 0.6rem;
+        letter-spacing: 0.3em;
+        display: block;
+        margin-bottom: 3px;
+      }
+
+      body.s-welcome .nav-footer,
+      body.s-summary .nav-footer {
+        display: none;
+      }
+
+      /* ====== receipt / summary ====== */
+      .receipt-stage {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        gap: 50px;
+        flex-wrap: wrap;
+      }
+      .receipt {
+        position: relative;
+        width: min(440px, 92vw);
+        background: linear-gradient(
+          180deg,
+          #f4e8d0 0%,
+          #ead7b1 45%,
+          #d9c298 100%
+        );
+        color: var(--ink);
+        padding: 44px 36px 32px;
+        font-family: "Special Elite", monospace;
+        box-shadow:
+          0 30px 60px rgba(0, 0, 0, 0.7),
+          0 0 0 1px rgba(0, 0, 0, 0.1),
+          inset 0 0 80px rgba(122, 98, 53, 0.18);
+        transform: rotate(-1.5deg);
+        animation: receiptIn 1s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+        max-height: 78vh;
+        overflow: auto;
+      }
+      .receipt::-webkit-scrollbar {
+        display: none;
+      }
+      @keyframes receiptIn {
+        0% {
+          opacity: 0;
+          transform: rotate(4deg) translateY(40px) scale(0.92);
+        }
+        100% {
+          opacity: 1;
+          transform: rotate(-1.5deg) translateY(0) scale(1);
+        }
+      }
+      .receipt::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: -12px;
+        height: 14px;
+        background: radial-gradient(
+            circle at 7px 14px,
+            transparent 6px,
+            #f4e8d0 6.5px
+          )
+          repeat-x;
+        background-size: 14px 14px;
+      }
+      .receipt::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: -12px;
+        height: 14px;
+        background: radial-gradient(
+            circle at 7px 0px,
+            transparent 6px,
+            #d9c298 6.5px
+          )
+          repeat-x;
+        background-size: 14px 14px;
+      }
+      .receipt .stamp {
+        position: absolute;
+        top: 18px;
+        right: -18px;
+        transform: rotate(14deg);
+        color: var(--burgundy);
+        opacity: 0.7;
+        border: 3px double var(--burgundy);
+        padding: 8px 14px;
+        font-family: "Cinzel", serif;
+        letter-spacing: 0.18em;
+        font-size: 0.7rem;
+        text-transform: uppercase;
+      }
+      .receipt h3 {
+        font-family: "Cinzel Decorative", serif;
+        text-align: center;
+        font-size: 1.9rem;
+        letter-spacing: 0.18em;
+        color: var(--ink);
+        margin-bottom: 4px;
+      }
+      .receipt .addr {
+        text-align: center;
+        font-size: 0.7rem;
+        color: var(--ink-soft);
+        letter-spacing: 0.18em;
+        margin-bottom: 2px;
+      }
+      .receipt hr {
+        border: none;
+        border-top: 1px dashed var(--ink-soft);
+        margin: 12px 0;
+      }
+      .receipt .meta {
+        display: flex;
+        justify-content: space-between;
+        font-size: 0.7rem;
+        color: var(--ink-soft);
+        letter-spacing: 0.05em;
+      }
+      .receipt .items {
+        font-size: 0.84rem;
+        line-height: 1.65;
+        color: var(--ink);
+      }
+      .receipt .items .row {
+        display: flex;
+        justify-content: space-between;
+        gap: 10px;
+        align-items: baseline;
+      }
+      .receipt .items .row .nm {
+        flex: 1;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      .receipt .items .row .px {
+        flex-shrink: 0;
+        font-variant-numeric: tabular-nums;
+      }
+      .receipt .items .row.sub {
+        padding-left: 14px;
+        font-size: 0.76rem;
+        color: var(--ink-soft);
+      }
+      .receipt .items .row.lux .nm::before {
+        content: "✦ ";
+        color: var(--burgundy);
+      }
+      .receipt .total {
+        font-family: "Cinzel", serif;
+        letter-spacing: 0.18em;
+        display: flex;
+        justify-content: space-between;
+        font-size: 1.05rem;
+        color: var(--ink);
+        margin-top: 8px;
+      }
+      .receipt .total .px {
+        font-family: "Special Elite", monospace;
+        letter-spacing: 0.05em;
+      }
+      .receipt .thanks {
+        text-align: center;
+        font-style: italic;
+        font-family: "Cormorant Garamond", serif;
+        color: var(--ink-soft);
+        margin-top: 14px;
+        font-size: 1.05rem;
+      }
+      .receipt .barcode {
+        margin-top: 12px;
+        height: 32px;
+        background: repeating-linear-gradient(
+          90deg,
+          var(--ink) 0 2px,
+          transparent 2px 4px,
+          var(--ink) 4px 5px,
+          transparent 5px 9px,
+          var(--ink) 9px 11px,
+          transparent 11px 13px
+        );
+        opacity: 0.85;
+      }
+      .receipt .barcode-num {
+        text-align: center;
+        font-size: 0.7rem;
+        color: var(--ink-soft);
+        letter-spacing: 0.3em;
+        margin-top: 4px;
+      }
+
+      .summary-side {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        max-width: 380px;
+      }
+      .summary-side .grand {
+        font-family: "Italiana", serif;
+        font-size: 5.2rem;
+        color: var(--gold-bright);
+        line-height: 1;
+        letter-spacing: 0.02em;
+        text-shadow: 0 4px 30px rgba(236, 201, 114, 0.25);
+      }
+      .summary-side .grand .won {
+        font-size: 2.8rem;
+        color: var(--gold);
+        vertical-align: top;
+        margin-right: 6px;
+      }
+      .summary-side .label {
+        font-family: "Cinzel", serif;
+        letter-spacing: 0.5em;
+        color: var(--paper-aged);
+        font-size: 0.7rem;
+        text-transform: uppercase;
+        margin-bottom: 18px;
+      }
+      .summary-side .quote {
+        font-family: "Cormorant Garamond", serif;
+        font-style: italic;
+        color: var(--paper-aged);
+        font-size: 1.1rem;
+        text-align: center;
+        margin: 22px 0;
+        max-width: 320px;
+        line-height: 1.5;
+      }
+
+      /* breath animations */
+      .fade-stagger > * {
+        opacity: 0;
+        transform: translateY(18px);
+        animation: rise2 0.9s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+      }
+      .slide.active .fade-stagger > *:nth-child(1) {
+        animation-delay: 0.08s;
+      }
+      .slide.active .fade-stagger > *:nth-child(2) {
+        animation-delay: 0.18s;
+      }
+      .slide.active .fade-stagger > *:nth-child(3) {
+        animation-delay: 0.28s;
+      }
+      .slide.active .fade-stagger > *:nth-child(4) {
+        animation-delay: 0.38s;
+      }
+      .slide.active .fade-stagger > *:nth-child(5) {
+        animation-delay: 0.48s;
+      }
+      .slide.active .fade-stagger > *:nth-child(6) {
+        animation-delay: 0.58s;
+      }
+      @keyframes rise2 {
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .kbd-hint {
+        position: fixed;
+        top: 24px;
+        left: 50%;
+        transform: translateX(-50%);
+        font-family: "Cinzel", serif;
+        letter-spacing: 0.4em;
+        color: rgba(201, 161, 74, 0.4);
+        font-size: 0.6rem;
+        text-transform: uppercase;
+        z-index: 30;
+        pointer-events: none;
+      }
+
+      /* ====== ambient audio toggle ====== */
+      .audio-toggle {
+        position: fixed;
+        top: 22px;
+        right: 22px;
+        z-index: 70;
+        width: 44px;
+        height: 44px;
+        cursor: pointer;
+        background: rgba(10, 6, 3, 0.55);
+        border: 1px solid rgba(201, 161, 74, 0.4);
+        color: var(--gold);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+        backdrop-filter: blur(4px);
+      }
+      .audio-toggle:hover {
+        border-color: var(--gold-bright);
+        color: var(--gold-bright);
+        box-shadow: 0 0 14px rgba(236, 201, 114, 0.25);
+      }
+      .audio-toggle svg {
+        width: 20px;
+        height: 20px;
+      }
+      .audio-toggle .bars {
+        display: flex;
+        align-items: flex-end;
+        gap: 2px;
+        height: 18px;
+      }
+      .audio-toggle .bars span {
+        display: block;
+        width: 3px;
+        background: currentColor;
+        animation: eqBar 1.1s ease-in-out infinite;
+        transform-origin: bottom;
+      }
+      .audio-toggle .bars span:nth-child(1) {
+        height: 60%;
+        animation-delay: 0s;
+      }
+      .audio-toggle .bars span:nth-child(2) {
+        height: 100%;
+        animation-delay: 0.15s;
+      }
+      .audio-toggle .bars span:nth-child(3) {
+        height: 50%;
+        animation-delay: 0.3s;
+      }
+      .audio-toggle .bars span:nth-child(4) {
+        height: 85%;
+        animation-delay: 0.45s;
+      }
+      @keyframes eqBar {
+        0%,
+        100% {
+          transform: scaleY(0.35);
+        }
+        50% {
+          transform: scaleY(1);
+        }
+      }
+      .audio-toggle.muted .bars span {
+        animation-play-state: paused;
+        opacity: 0.4;
+      }
+      .audio-toggle.muted::after {
+        content: "";
+        position: absolute;
+        left: 6px;
+        right: 6px;
+        top: 50%;
+        height: 1.5px;
+        background: var(--burgundy);
+        transform: rotate(-30deg);
+        box-shadow: 0 0 6px rgba(122, 42, 50, 0.6);
+      }
+      .audio-toggle .pulse {
+        position: absolute;
+        inset: -1px;
+        border: 1px solid var(--gold-bright);
+        opacity: 0;
+        pointer-events: none;
+      }
+      .audio-toggle.pending .pulse {
+        animation: pulseRing 1.6s ease-out infinite;
+      }
+      @keyframes pulseRing {
+        0% {
+          opacity: 0.7;
+          transform: scale(1);
+        }
+        100% {
+          opacity: 0;
+          transform: scale(1.5);
+        }
+      }
+
+      /* section label inside slide for compound steps */
+      .section-label {
+        font-family: "Cinzel", serif;
+        color: var(--gold);
+        font-size: 0.7rem;
+        letter-spacing: 0.45em;
+        text-transform: uppercase;
+        margin: 18px 0 14px;
+        text-align: center;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 14px;
+      }
+      .section-label::before,
+      .section-label::after {
+        content: "";
+        flex: 1;
+        max-width: 80px;
+        height: 1px;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          var(--gold),
+          transparent
+        );
+      }
+
+      @media (max-width: 720px) {
+        .options {
+          grid-template-columns: 1fr 1fr;
+          gap: 12px;
+        }
+        .options.dense {
+          grid-template-columns: 1fr 1fr;
+        }
+        .card {
+          padding: 18px 12px 14px;
+        }
+        .card .name {
+          font-size: 1.2rem;
+        }
+        .nav-footer {
+          flex-direction: column;
+          gap: 8px;
+          padding-bottom: 10px;
+        }
+        .corner-frame {
+          width: 54px;
+          height: 54px;
+        }
+        .summary-side .grand {
+          font-size: 3.4rem;
+        }
+        .summary-side .grand .won {
+          font-size: 1.9rem;
+        }
+        .receipt-stage {
+          gap: 30px;
+        }
+        .slide {
+          padding: 5vh 4vw 22vh;
+        }
+      }
+    </style>
+  </head>
+  <body class="s-welcome">
+    <svg class="corner-frame tl" viewBox="0 0 100 100" fill="none">
+      <path d="M2 40 V2 H40" stroke="currentColor" stroke-width="1" />
+      <path d="M10 32 V10 H32" stroke="currentColor" stroke-width=".6" />
+      <path
+        d="M2 60 Q14 50 26 60 T50 60"
+        stroke="currentColor"
+        stroke-width=".5"
+      />
+      <circle cx="18" cy="18" r="2" fill="currentColor" />
+      <path d="M40 2 Q50 14 60 2" stroke="currentColor" stroke-width=".5" />
+    </svg>
+    <svg class="corner-frame tr" viewBox="0 0 100 100" fill="none">
+      <path d="M2 40 V2 H40" stroke="currentColor" stroke-width="1" />
+      <path d="M10 32 V10 H32" stroke="currentColor" stroke-width=".6" />
+      <path
+        d="M2 60 Q14 50 26 60 T50 60"
+        stroke="currentColor"
+        stroke-width=".5"
+      />
+      <circle cx="18" cy="18" r="2" fill="currentColor" />
+      <path d="M40 2 Q50 14 60 2" stroke="currentColor" stroke-width=".5" />
+    </svg>
+    <svg class="corner-frame bl" viewBox="0 0 100 100" fill="none">
+      <path d="M2 40 V2 H40" stroke="currentColor" stroke-width="1" />
+      <path d="M10 32 V10 H32" stroke="currentColor" stroke-width=".6" />
+      <path
+        d="M2 60 Q14 50 26 60 T50 60"
+        stroke="currentColor"
+        stroke-width=".5"
+      />
+      <circle cx="18" cy="18" r="2" fill="currentColor" />
+      <path d="M40 2 Q50 14 60 2" stroke="currentColor" stroke-width=".5" />
+    </svg>
+    <svg class="corner-frame br" viewBox="0 0 100 100" fill="none">
+      <path d="M2 40 V2 H40" stroke="currentColor" stroke-width="1" />
+      <path d="M10 32 V10 H32" stroke="currentColor" stroke-width=".6" />
+      <path
+        d="M2 60 Q14 50 26 60 T50 60"
+        stroke="currentColor"
+        stroke-width=".5"
+      />
+      <circle cx="18" cy="18" r="2" fill="currentColor" />
+      <path d="M40 2 Q50 14 60 2" stroke="currentColor" stroke-width=".5" />
+    </svg>
+
+    <div class="kbd-hint" id="kbdHint">← prev continue →</div>
+
+    <!-- Ambient saloon audio (looping). Browsers require a user gesture to play with sound. -->
+    <audio
+      id="ambientAudio"
+      src="videoplayback.mp4"
+      loop
+      preload="auto"
+      playsinline
+    ></audio>
+
+    <button
+      class="audio-toggle pending muted"
+      id="audioToggle"
+      type="button"
+      aria-label="Toggle ambient music"
+      title="Ambient music"
+    >
+      <span class="pulse"></span>
+      <span class="bars" aria-hidden="true">
+        <span></span><span></span><span></span><span></span>
+      </span>
+    </button>
+
+    <div class="deck" id="deck">
+      <section class="slide welcome active" data-slide="welcome">
+        <div
+          class="fade-stagger"
+          style="display: flex; flex-direction: column; align-items: center"
+        >
+          <div class="ornament">
+            <span class="line"></span><span class="diamond"></span>
+            <span class="label">Anno MDCCCXCVII</span>
+            <span class="diamond"></span><span class="line"></span>
+          </div>
+
+          <div class="cup">
+            <div class="steam"><span></span><span></span><span></span></div>
+            <svg viewBox="0 0 100 100" fill="none">
+              <path
+                d="M22 38 H72 V62 Q72 80 47 80 Q22 80 22 62 Z"
+                stroke="currentColor"
+                stroke-width="1.4"
+              />
+              <path
+                d="M72 44 Q86 44 86 56 Q86 68 72 68"
+                stroke="currentColor"
+                stroke-width="1.4"
+              />
+              <ellipse
+                cx="47"
+                cy="38"
+                rx="25"
+                ry="3"
+                stroke="currentColor"
+                stroke-width="1"
+              />
+              <path d="M30 84 H64" stroke="currentColor" stroke-width="1.2" />
+              <path d="M26 88 H68" stroke="currentColor" stroke-width=".6" />
+            </svg>
+          </div>
+
+          <h1 class="marquee">SALOON</h1>
+
+          <div class="est">EST. MDCCCXCVII · NO. 42 RUE VERDANT</div>
+          <div class="tagline">
+            — A House of Refined &amp; Curious Beverages —
+          </div>
+
+          <button class="btn primary" onclick="next()">
+            <span class="corners"></span>
+            Begin Thy Composition
+          </button>
+
+          <div class="ornament" style="margin-top: 30px">
+            <span class="line"></span><span class="diamond"></span
+            ><span class="line"></span>
+          </div>
+        </div>
+      </section>
+
+      <section class="slide" data-slide="drink">
+        <div
+          class="fade-stagger"
+          style="
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+          "
+        >
+          <div class="ornament chapter-orn">
+            <span class="line"></span><span class="diamond"></span
+            ><span class="label">Chapter <span class="chnum">I</span></span
+            ><span class="diamond"></span><span class="line"></span>
+          </div>
+          <h2 class="title">The Beverage</h2>
+          <p class="subtitle">
+            Pray, choose the cornerstone of your composition. Each is prepared
+            by hand at the proprietor's bench.
+          </p>
+          <div class="options" id="opts-drink"></div>
+        </div>
+      </section>
+
+      <section class="slide" data-slide="temperature">
+        <div
+          class="fade-stagger"
+          style="
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+          "
+        >
+          <div class="ornament chapter-orn">
+            <span class="line"></span><span class="diamond"></span
+            ><span class="label">Chapter <span class="chnum">II</span></span
+            ><span class="diamond"></span><span class="line"></span>
+          </div>
+          <h2 class="title">The Temperament</h2>
+          <p class="subtitle">
+            At what climate shall thy cup be presented? The proprietor
+            recommends 73°C, but indulges every preference.
+          </p>
+          <div class="options" id="opts-temp"></div>
+        </div>
+      </section>
+
+      <section class="slide" data-slide="beans">
+        <div
+          class="fade-stagger"
+          style="
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+          "
+        >
+          <div class="ornament chapter-orn">
+            <span class="line"></span><span class="diamond"></span
+            ><span class="label">Chapter <span class="chnum">III</span></span
+            ><span class="diamond"></span><span class="line"></span>
+          </div>
+          <h2 class="title">The Bean</h2>
+          <p class="subtitle">
+            From cellared estates the world over. Each parcel is roasted in
+            copper, in small batch, by Monsieur Devereaux.
+          </p>
+          <div class="options" id="opts-beans"></div>
+        </div>
+      </section>
+
+      <section class="slide" data-slide="water">
+        <div
+          class="fade-stagger"
+          style="
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+          "
+        >
+          <div class="ornament chapter-orn">
+            <span class="line"></span><span class="diamond"></span
+            ><span class="label">Chapter <span class="chnum">IV</span></span
+            ><span class="diamond"></span><span class="line"></span>
+          </div>
+          <h2 class="title">The Water</h2>
+          <p class="subtitle">
+            Drawn from quiet corners of the world — and one or two corners of
+            myth — decanted at the precise temperament prescribed.
+          </p>
+          <div class="options" id="opts-water"></div>
+        </div>
+      </section>
+
+      <section class="slide" data-slide="milk">
+        <div
+          class="fade-stagger"
+          style="
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+          "
+        >
+          <div class="ornament chapter-orn">
+            <span class="line"></span><span class="diamond"></span
+            ><span class="label">Chapter <span class="chnum">V</span></span
+            ><span class="diamond"></span><span class="line"></span>
+          </div>
+          <h2 class="title">The Milk</h2>
+          <p class="subtitle">
+            Frothed soft as a cloud — or omitted, should the gentleman or lady
+            prefer. The proprietor passes no judgement.
+          </p>
+          <div class="options dense" id="opts-milk"></div>
+        </div>
+      </section>
+
+      <section class="slide" data-slide="extras">
+        <div
+          class="fade-stagger"
+          style="
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            max-width: 1020px;
+          "
+        >
+          <div class="ornament chapter-orn">
+            <span class="line"></span><span class="diamond"></span
+            ><span class="label">Chapter <span class="chnum">VI</span></span
+            ><span class="diamond"></span><span class="line"></span>
+          </div>
+          <h2 class="title">The Embellishment</h2>
+          <p class="subtitle">
+            A measure of sweetness, perhaps a flourish of syrup. Discretion is
+            the proprietor's hallmark.
+          </p>
+
+          <div class="sugar">
+            <div class="lbl">Sugar — by the Cube</div>
+            <div class="sugar-track" id="sugarTrack">
+              <div class="sugar-cube" data-sugar="0">
+                <span class="num">0</span>
+              </div>
+              <div class="sugar-cube" data-sugar="1">
+                <span class="num">1</span>
+              </div>
+              <div class="sugar-cube" data-sugar="2">
+                <span class="num">2</span>
+              </div>
+              <div class="sugar-cube" data-sugar="3">
+                <span class="num">3</span>
+              </div>
+              <div class="sugar-cube" data-sugar="4">
+                <span class="num">4</span>
+              </div>
+              <div class="sugar-cube" data-sugar="5">
+                <span class="num">5</span>
+              </div>
+            </div>
+            <div class="sugar-readout" id="sugarRead">— Unsweetened —</div>
+          </div>
+
+          <div class="section-label">Syrups &amp; Flourishes</div>
+          <div class="chips" id="chipsSyrup"></div>
+        </div>
+      </section>
+
+      <section class="slide" data-slide="topping">
+        <div
+          class="fade-stagger"
+          style="
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+          "
+        >
+          <div class="ornament chapter-orn">
+            <span class="line"></span><span class="diamond"></span
+            ><span class="label">Chapter <span class="chnum">VII</span></span
+            ><span class="diamond"></span><span class="line"></span>
+          </div>
+          <h2 class="title">The Crown</h2>
+          <p class="subtitle">
+            A final flourish atop the cup — dust, petal, or precious leaf. The
+            composition is incomplete without it.
+          </p>
+          <div class="options dense" id="opts-topping"></div>
+        </div>
+      </section>
+
+      <section class="slide" data-slide="vessel">
+        <div
+          class="fade-stagger"
+          style="
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+          "
+        >
+          <div class="ornament chapter-orn">
+            <span class="line"></span><span class="diamond"></span
+            ><span class="label">Chapter <span class="chnum">VIII</span></span
+            ><span class="diamond"></span><span class="line"></span>
+          </div>
+          <h2 class="title">The Vessel</h2>
+          <p class="subtitle">
+            From the proprietor's cabinet: porcelain, crystal, pewter, and one
+            or two pieces never meant to leave the case.
+          </p>
+          <div class="options" id="opts-vessel"></div>
+        </div>
+      </section>
+
+      <section class="slide" data-slide="cookie">
+        <div
+          class="fade-stagger"
+          style="
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+          "
+        >
+          <div class="ornament chapter-orn">
+            <span class="line"></span><span class="diamond"></span
+            ><span class="label">Chapter <span class="chnum">IX</span></span
+            ><span class="diamond"></span><span class="line"></span>
+          </div>
+          <h2 class="title">The Accompaniment</h2>
+          <p class="subtitle">
+            A confection from the patisserie cabinet. Strictly optional — but
+            strongly encouraged.
+          </p>
+          <div class="options dense" id="opts-cookie"></div>
+        </div>
+      </section>
+
+      <section class="slide summary" data-slide="summary">
+        <div class="receipt-stage">
+          <aside class="summary-side fade-stagger">
+            <div class="ornament" style="margin-bottom: 18px">
+              <span class="line"></span><span class="diamond"></span
+              ><span class="label">The Reckoning</span
+              ><span class="diamond"></span><span class="line"></span>
+            </div>
+            <div class="label">Total Due</div>
+            <div class="grand">
+              <span class="won">₩</span><span id="grandTotal">0</span>
+            </div>
+            <p class="quote">
+              "A composition assembled with care — yours, signed &amp; sealed."
+            </p>
+            <div
+              style="
+                display: flex;
+                gap: 18px;
+                align-items: center;
+                flex-wrap: wrap;
+                justify-content: center;
+              "
+            >
+              <button class="btn ghost" onclick="restart()">
+                <span class="corners"></span>Begin Anew
+              </button>
+              <button
+                class="btn primary"
+                id="confirmBtn"
+                onclick="confirmOrder(this)"
+              >
+                <span class="corners"></span>Confirm Order
+              </button>
+            </div>
+          </aside>
+
+          <div class="receipt" id="receipt">
+            <div class="stamp">Saloon · MDCCCXCVII</div>
+            <h3>SALOON</h3>
+            <div class="addr">No. 42 Rue Verdant</div>
+            <div class="addr">— A House of Refined Beverages —</div>
+            <hr />
+            <div class="meta">
+              <span id="rcptNo">Ord. №7842</span
+              ><span id="rcptDate">XII · V · MMXXVI</span>
+            </div>
+            <hr />
+            <div class="items" id="rcptItems"></div>
+            <hr />
+            <div class="items">
+              <div class="row">
+                <span class="nm">Subtotal</span
+                ><span class="px" id="rcptSubtotal">₩0</span>
+              </div>
+              <div class="row sub">
+                <span class="nm">Service &amp; Hospitality (10%)</span
+                ><span class="px" id="rcptService">₩0</span>
+              </div>
+            </div>
+            <hr />
+            <div class="total">
+              <span>Total</span
+              ><span class="px"><span id="rcptTotal">₩0</span></span>
+            </div>
+            <div class="thanks">— Thank you, kindly —</div>
+            <div class="barcode"></div>
+            <div class="barcode-num">S A L O O N · M D C C C X C V I I</div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <div class="nav-footer" id="navFooter">
+      <button class="btn ghost" id="btnBack" onclick="prev()">
+        <span class="corners"></span>← Return
+      </button>
+      <div class="progress">
+        <span
+          >Step <span id="stepNum">1</span> of
+          <span id="stepTotal">8</span></span
+        >
+        <div class="dots" id="dots"></div>
+      </div>
+      <div class="running-total">
+        <span class="lbl">Subtotal</span>
+        <span id="liveTotal">₩0</span>
+      </div>
+      <button class="btn primary" id="btnNext" onclick="next()">
+        <span class="corners"></span>Continue →
+      </button>
+    </div>
+
+    <script>
+      /* ============================================================
+   SALOON — drink composition flow
+   tier: '' | 'premium' | 'mythic'
+   ============================================================ */
+
+      const DRINKS = [
+        {
+          id: "coffee",
+          name: "Coffee",
+          desc: "A measure of bold espresso, drawn in the European fashion.",
+          price: 4500,
+          roman: "I",
+        },
+        {
+          id: "matcha",
+          name: "Matcha",
+          desc: "Stone-ground Uji leaf, whisked to a velvet foam.",
+          price: 5500,
+          roman: "II",
+        },
+        {
+          id: "latte",
+          name: "Latte",
+          desc: "A study in milk & coffee — pale, gentle, refined.",
+          price: 5000,
+          roman: "III",
+        },
+        {
+          id: "cocoa",
+          name: "Royal Cocoa",
+          desc: "Belgian dark chocolate, melted slow in copper, finished with cream.",
+          price: 5500,
+          roman: "IV",
+        },
+        {
+          id: "tea",
+          name: "Earl's Brew",
+          desc: "Bergamot black tea, steeped seven minutes by the proprietor's pocket-watch.",
+          price: 4000,
+          roman: "V",
+        },
+        {
+          id: "chai",
+          name: "Royal Chai",
+          desc: "Cardamom, clove, star anise & black tea, finished with sweet cream.",
+          price: 5500,
+          roman: "VI",
+        },
+        {
+          id: "affogato",
+          name: "Affogato",
+          desc: "A scoop of vanilla bean, drowned in espresso at the table.",
+          price: 6500,
+          roman: "VII",
+        },
+        {
+          id: "victoria",
+          name: "Victoria's Cordial",
+          desc: "The house secret — a sealed recipe spoken only to one apprentice each generation.",
+          price: 9500,
+          roman: "VIII",
+          tier: "premium",
+        },
+      ];
+
+      const TEMPS = [
+        {
+          id: "hot",
+          name: "Piping Hot",
+          desc: "Steamed at 73°C — the proprietor's prescription.",
+          price: 0,
+          roman: "I",
+        },
+        {
+          id: "warm",
+          name: "Tepid",
+          desc: "Gentle, as preferred in the Eastern provinces.",
+          price: 0,
+          roman: "II",
+        },
+        {
+          id: "iced",
+          name: "Iced",
+          desc: "Over hand-cut crystal-clear ice from the cellar.",
+          price: 500,
+          roman: "III",
+        },
+        {
+          id: "frozen",
+          name: "Frappéd",
+          desc: "Whipped to a velvet slush in the silver shaker.",
+          price: 1200,
+          roman: "IV",
+        },
+        {
+          id: "flamed",
+          name: "Flambéed",
+          desc: "Set alight at the table — extinguished with cream.",
+          price: 2500,
+          roman: "V",
+          tier: "premium",
+        },
+      ];
+
+      const BEANS = [
+        {
+          id: "african",
+          name: "African Reserve",
+          desc: "Dusky, with notes of black currant & cocoa nib.",
+          price: 1500,
+          roman: "I",
+        },
+        {
+          id: "brazil",
+          name: "Brazilian Gold",
+          desc: "Sun-cured, caramelised hazelnut & honey.",
+          price: 1000,
+          roman: "II",
+        },
+        {
+          id: "colombia",
+          name: "Colombian Estate",
+          desc: "Single origin, clean acidity of red apple & rose.",
+          price: 2000,
+          roman: "III",
+        },
+        {
+          id: "ethiopia",
+          name: "Ethiopian Sunrise",
+          desc: "Jasmine, bergamot & a fleeting note of ripe peach.",
+          price: 2500,
+          roman: "IV",
+        },
+        {
+          id: "blue_mtn",
+          name: "Jamaican Blue Mountain",
+          desc: "Mythically smooth, without bitterness. Strictly rationed.",
+          price: 4000,
+          roman: "V",
+        },
+        {
+          id: "kopi",
+          name: "Kopi Luwak",
+          desc: "Famously, controversially curated. Earthy and unrepeatable.",
+          price: 6000,
+          roman: "VI",
+        },
+        {
+          id: "victoria",
+          name: "Victoria's Crown Reserve",
+          desc: "Hand-picked at dawn from Her Majesty's private terraces. Twelve grams per cup.",
+          price: 8500,
+          roman: "VII",
+          tier: "premium",
+        },
+        {
+          id: "dragon",
+          name: "Dragon's Hoard",
+          desc: "Aged seven years in volcanic stone. The flavour is debated; the price is not.",
+          price: 12000,
+          roman: "VIII",
+          tier: "mythic",
+        },
+      ];
+
+      const WATERS = [
+        {
+          id: "sw_mtn",
+          name: "Swedish Mountain",
+          desc: "Granite-filtered, crisp as a Lapland morning.",
+          price: 800,
+          roman: "I",
+        },
+        {
+          id: "is_gla",
+          name: "Icelandic Glacier",
+          desc: "Ten-thousand years aged, drawn from blue ice.",
+          price: 1200,
+          roman: "II",
+        },
+        {
+          id: "al_spr",
+          name: "Alpine Spring",
+          desc: "Soft, mineral-rich, from a quiet Tyrolean source.",
+          price: 500,
+          roman: "III",
+        },
+        {
+          id: "tibet",
+          name: "Tibetan Monastery",
+          desc: "Drawn by monks at the summer solstice. Inexplicably calm.",
+          price: 1800,
+          roman: "IV",
+        },
+        {
+          id: "fiji",
+          name: "Fijian Volcanic",
+          desc: "Filtered through obsidian for a millennium.",
+          price: 1500,
+          roman: "V",
+        },
+        {
+          id: "patagonia",
+          name: "Patagonian Reserve",
+          desc: "Bottled where the world ends, by men in oilcloth.",
+          price: 2200,
+          roman: "VI",
+        },
+        {
+          id: "victoria",
+          name: "Victoria Falls Reserve",
+          desc: "Decanted at the thundering crown of Africa. Sealed by candle-wax.",
+          price: 5000,
+          roman: "VII",
+          tier: "premium",
+        },
+        {
+          id: "moonwell",
+          name: "Moonwell Spring",
+          desc: "Drawn only on a full moon. The bottle hums faintly.",
+          price: 7500,
+          roman: "VIII",
+          tier: "mythic",
+        },
+      ];
+
+      const MILKS = [
+        {
+          id: "whole",
+          name: "Whole Milk",
+          desc: "Cream-rich, from pasture-raised herds.",
+          price: 0,
+          roman: "I",
+        },
+        {
+          id: "oat",
+          name: "Oat Milk",
+          desc: "Velvety, plant-forward, gently sweet.",
+          price: 700,
+          roman: "II",
+        },
+        {
+          id: "almond",
+          name: "Almond Milk",
+          desc: "Lithe & nutty, with a whisper of marzipan.",
+          price: 600,
+          roman: "III",
+        },
+        {
+          id: "soy",
+          name: "Soy Milk",
+          desc: "Steady, quiet — the traditionalist's pour.",
+          price: 500,
+          roman: "IV",
+        },
+        {
+          id: "coconut",
+          name: "Coconut Cream",
+          desc: "Tropical, opulent — pairs sweetly with cocoa.",
+          price: 900,
+          roman: "V",
+        },
+        {
+          id: "pistachio",
+          name: "Pistachio Milk",
+          desc: "Pale green, faintly grassy, deeply elegant.",
+          price: 1200,
+          roman: "VI",
+        },
+        {
+          id: "buffalo",
+          name: "Italian Buffalo Cream",
+          desc: "Thick as silk, ferried from Campania by dawn rail.",
+          price: 2000,
+          roman: "VII",
+        },
+        {
+          id: "none",
+          name: "Sans Milk",
+          desc: "Pure, as the proprietor originally intended.",
+          price: 0,
+          roman: "VIII",
+        },
+        {
+          id: "victoria",
+          name: "Victoria's Jersey Cream",
+          desc: "From Her Majesty's own Channel herd. Skimmed by hand at five o'clock.",
+          price: 3500,
+          roman: "IX",
+          tier: "premium",
+        },
+        {
+          id: "unicorn",
+          name: "Unicorn Milk",
+          desc: "Shimmering, opalescent, distinctly improbable.",
+          price: 6500,
+          roman: "X",
+          tier: "mythic",
+        },
+      ];
+
+      const SYRUPS = [
+        { id: "vanilla", name: "Vanilla", price: 500 },
+        { id: "caramel", name: "Salted Caramel", price: 500 },
+        { id: "hazelnut", name: "Hazelnut", price: 600 },
+        { id: "cinnamon", name: "Cinnamon", price: 400 },
+        { id: "lavender", name: "Lavender", price: 700 },
+        { id: "rose", name: "Damask Rose", price: 700 },
+        { id: "elderflower", name: "Elderflower", price: 800 },
+        { id: "saffron", name: "Saffron", price: 1500 },
+        { id: "pistachio", name: "Pistachio", price: 900 },
+        { id: "maple", name: "Smoked Maple", price: 800 },
+        { id: "cardamom", name: "Cardamom", price: 700 },
+        { id: "sesame", name: "Black Sesame", price: 900 },
+        { id: "tonka", name: "Tonka Bean", price: 1100 },
+        {
+          id: "victoria",
+          name: "Victoria's Honey",
+          price: 2000,
+          tier: "premium",
+        },
+        {
+          id: "moonberry",
+          name: "Moonberry Cordial",
+          price: 2500,
+          tier: "mythic",
+        },
+      ];
+
+      const TOPPINGS = [
+        {
+          id: "none",
+          name: "No Crown",
+          desc: "A bare cup is its own statement.",
+          price: 0,
+          roman: "O",
+        },
+        {
+          id: "whip",
+          name: "Whipped Cream",
+          desc: "Soft peaks, lightly sweetened.",
+          price: 500,
+          roman: "I",
+        },
+        {
+          id: "cocoa",
+          name: "Cocoa Dust",
+          desc: "Pure cocoa, sifted at the moment of service.",
+          price: 300,
+          roman: "II",
+        },
+        {
+          id: "cinnamon",
+          name: "Cinnamon Veil",
+          desc: "Ceylon cinnamon, ground to a fine snow.",
+          price: 300,
+          roman: "III",
+        },
+        {
+          id: "petals",
+          name: "Edible Petals",
+          desc: "Crystallised rose & marigold, plucked at dawn.",
+          price: 1000,
+          roman: "IV",
+        },
+        {
+          id: "pistachio",
+          name: "Crushed Pistachio",
+          desc: "Sicilian pistachio, hand-broken.",
+          price: 800,
+          roman: "V",
+        },
+        {
+          id: "meringue",
+          name: "Toasted Meringue",
+          desc: "Brûléed by torch at the table.",
+          price: 1200,
+          roman: "VI",
+        },
+        {
+          id: "gold",
+          name: "Edible Gold Leaf",
+          desc: "23-carat, beaten thinner than a sigh.",
+          price: 4500,
+          roman: "VII",
+          tier: "premium",
+        },
+        {
+          id: "stardust",
+          name: "Stardust",
+          desc: "A pinch of something the proprietor refuses to identify.",
+          price: 7000,
+          roman: "VIII",
+          tier: "mythic",
+        },
+      ];
+
+      const VESSELS = [
+        {
+          id: "porcelain",
+          name: "Standard Porcelain",
+          desc: "Bone china, the house's daily set. Quietly perfect.",
+          price: 0,
+          roman: "I",
+        },
+        {
+          id: "crystal",
+          name: "Cut Crystal Goblet",
+          desc: "Bohemian, faceted, for the iced compositions.",
+          price: 1500,
+          roman: "II",
+        },
+        {
+          id: "pewter",
+          name: "Pewter Mug",
+          desc: "Tarnished by gentle use across the decades.",
+          price: 1200,
+          roman: "III",
+        },
+        {
+          id: "enamel",
+          name: "Enamelled Tin",
+          desc: "Travelling vessel — built for the open road.",
+          price: 800,
+          roman: "IV",
+        },
+        {
+          id: "glass",
+          name: "Bistro Glass",
+          desc: "Thick-walled, with a generous handle.",
+          price: 600,
+          roman: "V",
+        },
+        {
+          id: "spode",
+          name: "Royal Spode",
+          desc: "Hand-painted, mid-Victorian, kept under glass.",
+          price: 3500,
+          roman: "VI",
+          tier: "premium",
+        },
+        {
+          id: "heirloom",
+          name: "Saloon Heirloom Cup",
+          desc: "Of which only seven remain. None for sale; one for use.",
+          price: 5500,
+          roman: "VII",
+          tier: "premium",
+        },
+        {
+          id: "phoenix",
+          name: "Phoenix-Shell Chalice",
+          desc: "Cast from a shell said to never cool. It does.",
+          price: 8000,
+          roman: "VIII",
+          tier: "mythic",
+        },
+      ];
+
+      const COOKIES = [
+        {
+          id: "none",
+          name: "No Confection",
+          desc: "Sometimes — simply, the cup will do.",
+          price: 0,
+          roman: "O",
+        },
+        {
+          id: "choc",
+          name: "Chocolate Chip",
+          desc: "Belgian dark callets, slow-baked till tender.",
+          price: 3000,
+          roman: "I",
+        },
+        {
+          id: "butter",
+          name: "French Butter",
+          desc: "Normandy butter, sea salt, golden at the edge.",
+          price: 2500,
+          roman: "II",
+        },
+        {
+          id: "macadamia",
+          name: "Macadamia",
+          desc: "Hawaiian macadamia, white chocolate, fleur de sel.",
+          price: 3500,
+          roman: "III",
+        },
+        {
+          id: "madeleine",
+          name: "Earl Grey Madeleine",
+          desc: "Bergamot-perfumed, with a perfect shell hump.",
+          price: 3800,
+          roman: "IV",
+        },
+        {
+          id: "shortbread",
+          name: "Lavender Shortbread",
+          desc: "Crumbling, perfumed, the texture of a quiet afternoon.",
+          price: 4000,
+          roman: "V",
+        },
+        {
+          id: "florentine",
+          name: "Almond Florentine",
+          desc: "Honeyed lace of almond & candied orange peel.",
+          price: 4500,
+          roman: "VI",
+        },
+        {
+          id: "biscotti",
+          name: "Hazelnut Biscotti",
+          desc: "Twice-baked, built for dunking.",
+          price: 3200,
+          roman: "VII",
+        },
+        {
+          id: "victoria",
+          name: "Victoria Sponge Slice",
+          desc: "The Queen's teatime sponge — raspberry, cream, dusted in sugar.",
+          price: 6000,
+          roman: "VIII",
+          tier: "premium",
+        },
+        {
+          id: "phoenix",
+          name: "Phoenix Feather Crisp",
+          desc: "Reputedly baked in volcanic ash. Surprisingly buttery.",
+          price: 8500,
+          roman: "IX",
+          tier: "mythic",
+        },
+      ];
+
+      /* ============================================================
+   State
+   ============================================================ */
+
+      const state = {
+        drink: null,
+        temperature: null,
+        beans: null,
+        water: null,
+        milk: null,
+        sugar: 0,
+        syrups: [],
+        topping: null,
+        vessel: null,
+        cookie: null,
+      };
+
+      const slideKeys = [
+        "welcome",
+        "drink",
+        "temperature",
+        "beans",
+        "water",
+        "milk",
+        "extras",
+        "topping",
+        "vessel",
+        "cookie",
+        "summary",
+      ];
+      let current = 0;
+
+      function visibleSteps() {
+        return slideKeys
+          .slice(1, -1)
+          .filter((k) => !(k === "beans" && state.drink !== "coffee"));
+      }
+
+      function goto(idx, dir = 1) {
+        const slides = document.querySelectorAll(".slide");
+        const prevSlide = slides[current];
+        prevSlide.classList.add("leaving");
+        prevSlide.classList.remove("active");
+
+        current = idx;
+        const key = slideKeys[current];
+        if (key === "beans" && state.drink !== "coffee") {
+          state.beans = null;
+          current += dir > 0 ? 1 : -1;
+        }
+
+        setTimeout(() => {
+          document
+            .querySelectorAll(".slide")
+            .forEach((s) => s.classList.remove("leaving", "active"));
+          document.querySelectorAll(".slide")[current].classList.add("active");
+          syncChrome();
+        }, 50);
+      }
+
+      function next() {
+        const key = slideKeys[current];
+        if (!validate(key)) {
+          flashNext();
+          return;
+        }
+        if (current < slideKeys.length - 1) goto(current + 1, 1);
+      }
+      function prev() {
+        if (current > 0) goto(current - 1, -1);
+      }
+
+      function validate(key) {
+        switch (key) {
+          case "drink":
+            return !!state.drink;
+          case "temperature":
+            return !!state.temperature;
+          case "beans":
+            return !!state.beans;
+          case "water":
+            return !!state.water;
+          case "milk":
+            return !!state.milk;
+          case "extras":
+            return true;
+          case "topping":
+            return !!state.topping;
+          case "vessel":
+            return !!state.vessel;
+          case "cookie":
+            return !!state.cookie;
+          default:
+            return true;
+        }
+      }
+
+      function flashNext() {
+        const btn = document.getElementById("btnNext");
+        btn.animate(
+          [
+            { transform: "translateX(0)" },
+            { transform: "translateX(-6px)" },
+            { transform: "translateX(6px)" },
+            { transform: "translateX(0)" },
+          ],
+          { duration: 320, easing: "ease-in-out" },
+        );
+      }
+
+      function syncChrome() {
+        const key = slideKeys[current];
+        document.body.className = "s-" + key;
+
+        const visible = visibleSteps();
+        const sIdx = visible.indexOf(key);
+        document.getElementById("stepTotal").textContent = visible.length;
+        document.getElementById("stepNum").textContent = Math.max(1, sIdx + 1);
+
+        // sync chapter numbers per-slide based on current visibility
+        document.querySelectorAll(".slide").forEach((slide) => {
+          const k = slide.dataset.slide;
+          const vIdx = visible.indexOf(k);
+          if (vIdx >= 0) {
+            const num = slide.querySelector(".chnum");
+            if (num) num.textContent = toRoman(vIdx + 1);
+          }
+        });
+
+        const dotsEl = document.getElementById("dots");
+        dotsEl.innerHTML = "";
+        visible.forEach((k, i) => {
+          const d = document.createElement("div");
+          d.className =
+            "dot" + (i < sIdx ? " done" : i === sIdx ? " current" : "");
+          dotsEl.appendChild(d);
+        });
+
+        document.getElementById("btnBack").style.visibility =
+          current > 1 ? "visible" : "hidden";
+        const isLast = key === "cookie";
+        const nextBtn = document.getElementById("btnNext");
+        nextBtn.innerHTML =
+          '<span class="corners"></span>' +
+          (isLast ? "View Reckoning →" : "Continue →");
+
+        document.getElementById("liveTotal").textContent = fmt(total());
+
+        if (key === "summary") renderReceipt();
+      }
+
+      /* ============================================================
+   Cards
+   ============================================================ */
+
+      function makeCard(item, key, opts = {}) {
+        const div = document.createElement("div");
+        const tier = item.tier || "";
+        div.className = "card" + (tier ? " " + tier : "");
+        div.dataset.id = item.id;
+
+        const showBase = opts.showBasePrice;
+        let priceText;
+        if (showBase) {
+          priceText = "₩" + item.price.toLocaleString("ko-KR");
+        } else if (item.price > 0) {
+          priceText = "+ ₩" + item.price.toLocaleString("ko-KR");
+        } else {
+          priceText = "— complimentary —";
+        }
+
+        const badge =
+          tier === "premium"
+            ? '<div class="badge">Victoria&apos;s Reserve</div>'
+            : tier === "mythic"
+              ? '<div class="badge">Of the Veil</div>'
+              : "";
+
+        div.innerHTML = `
+    ${badge}
+    <div class="roman">${item.roman}</div>
+    <div class="name">${item.name}</div>
+    <div class="divider"></div>
+    <div class="desc">${item.desc}</div>
+    <div class="price">${priceText}</div>
+  `;
+        div.addEventListener("click", () => {
+          state[key] = item.id;
+          document
+            .querySelectorAll(`#opts-${opts.bucket || key} .card`)
+            .forEach((c) =>
+              c.classList.toggle("selected", c.dataset.id === item.id),
+            );
+          document.getElementById("liveTotal").textContent = fmt(total());
+          setTimeout(next, 380);
+        });
+        return div;
+      }
+
+      function mount(containerId, items, key, opts) {
+        const c = document.getElementById(containerId);
+        c.innerHTML = "";
+        items.forEach((it) => c.appendChild(makeCard(it, key, opts)));
+      }
+
+      mount("opts-drink", DRINKS, "drink", {
+        showBasePrice: true,
+        bucket: "drink",
+      });
+      mount("opts-temp", TEMPS, "temperature", { bucket: "temp" });
+      mount("opts-beans", BEANS, "beans", { bucket: "beans" });
+      mount("opts-water", WATERS, "water", { bucket: "water" });
+      mount("opts-milk", MILKS, "milk", { bucket: "milk" });
+      mount("opts-topping", TOPPINGS, "topping", { bucket: "topping" });
+      mount("opts-vessel", VESSELS, "vessel", { bucket: "vessel" });
+      mount("opts-cookie", COOKIES, "cookie", { bucket: "cookie" });
+
+      /* ============================================================
+   Sugar + syrups
+   ============================================================ */
+
+      const sugarLabels = [
+        "— Unsweetened —",
+        "A single cube · gently sweet",
+        "Two cubes · proper afternoon strength",
+        "Three cubes · for the indulgent palate",
+        "Four cubes · the proprietor raises an eyebrow",
+        "Five cubes · the proprietor turns away in sorrow",
+      ];
+
+      document.querySelectorAll(".sugar-cube").forEach((cube) => {
+        cube.addEventListener("click", () => {
+          const n = parseInt(cube.dataset.sugar, 10);
+          state.sugar = n;
+          document
+            .querySelectorAll(".sugar-cube")
+            .forEach((c, i) => c.classList.toggle("on", i > 0 && i <= n));
+          document.getElementById("sugarRead").textContent = sugarLabels[n];
+          document.getElementById("liveTotal").textContent = fmt(total());
+        });
+      });
+
+      const chipsEl = document.getElementById("chipsSyrup");
+      SYRUPS.forEach((s) => {
+        const c = document.createElement("div");
+        const tierCls =
+          s.tier === "premium" ? " lux" : s.tier === "mythic" ? " lux" : "";
+        c.className = "chip" + tierCls;
+        c.innerHTML = `${s.name}<span class="px">+ ₩${s.price.toLocaleString("ko-KR")}</span>`;
+        c.addEventListener("click", () => {
+          const i = state.syrups.indexOf(s.id);
+          if (i === -1) state.syrups.push(s.id);
+          else state.syrups.splice(i, 1);
+          c.classList.toggle("on");
+          document.getElementById("liveTotal").textContent = fmt(total());
+        });
+        chipsEl.appendChild(c);
+      });
+
+      /* ============================================================
+   Totals
+   ============================================================ */
+
+      function find(arr, id) {
+        return arr.find((x) => x.id === id);
+      }
+
+      function lineItems() {
+        const lines = [];
+        if (state.drink) {
+          const d = find(DRINKS, state.drink);
+          lines.push({ name: d.name, price: d.price, tier: d.tier });
+        }
+        if (state.temperature) {
+          const t = find(TEMPS, state.temperature);
+          if (t.price > 0 || t.tier)
+            lines.push({
+              name: t.name,
+              price: t.price,
+              sub: true,
+              tier: t.tier,
+            });
+        }
+        if (state.drink === "coffee" && state.beans) {
+          const b = find(BEANS, state.beans);
+          lines.push({
+            name: b.name + " beans",
+            price: b.price,
+            sub: true,
+            tier: b.tier,
+          });
+        }
+        if (state.water) {
+          const w = find(WATERS, state.water);
+          lines.push({
+            name: w.name + " water",
+            price: w.price,
+            sub: true,
+            tier: w.tier,
+          });
+        }
+        if (state.milk) {
+          const m = find(MILKS, state.milk);
+          if (m.id !== "none")
+            lines.push({
+              name: m.name,
+              price: m.price,
+              sub: true,
+              tier: m.tier,
+            });
+        }
+        state.syrups.forEach((id) => {
+          const s = find(SYRUPS, id);
+          lines.push({
+            name: s.name + " syrup",
+            price: s.price,
+            sub: true,
+            tier: s.tier,
+          });
+        });
+        if (state.sugar > 0)
+          lines.push({ name: `Sugar × ${state.sugar}`, price: 0, sub: true });
+        if (state.topping && state.topping !== "none") {
+          const tp = find(TOPPINGS, state.topping);
+          lines.push({
+            name: tp.name,
+            price: tp.price,
+            sub: true,
+            tier: tp.tier,
+          });
+        }
+        if (state.vessel) {
+          const v = find(VESSELS, state.vessel);
+          if (v.price > 0 || v.tier)
+            lines.push({
+              name: v.name + " vessel",
+              price: v.price,
+              sub: true,
+              tier: v.tier,
+            });
+        }
+        if (state.cookie && state.cookie !== "none") {
+          const k = find(COOKIES, state.cookie);
+          lines.push({
+            name: k.name + " cookie",
+            price: k.price,
+            tier: k.tier,
+          });
+        }
+        return lines;
+      }
+
+      function subtotal() {
+        return lineItems().reduce((a, b) => a + b.price, 0);
+      }
+      function service() {
+        return Math.round(subtotal() * 0.1);
+      }
+      function total() {
+        return subtotal() + service();
+      }
+      function fmt(n) {
+        return "₩" + n.toLocaleString("ko-KR");
+      }
+
+      /* ============================================================
+   Receipt
+   ============================================================ */
+
+      function renderReceipt() {
+        const d = new Date();
+        const day = toRoman(d.getDate());
+        const months = [
+          "I",
+          "II",
+          "III",
+          "IV",
+          "V",
+          "VI",
+          "VII",
+          "VIII",
+          "IX",
+          "X",
+          "XI",
+          "XII",
+        ];
+        const mo = months[d.getMonth()];
+        const yr = toRoman(d.getFullYear());
+        document.getElementById("rcptDate").textContent =
+          `${day} · ${mo} · ${yr}`;
+        document.getElementById("rcptNo").textContent =
+          "Ord. №" + (4000 + Math.floor(Math.random() * 4000));
+
+        const itemsEl = document.getElementById("rcptItems");
+        itemsEl.innerHTML = "";
+        lineItems().forEach((li) => {
+          const r = document.createElement("div");
+          r.className =
+            "row" + (li.sub ? " sub" : "") + (li.tier ? " lux" : "");
+          const px =
+            li.price > 0 ? "₩" + li.price.toLocaleString("ko-KR") : "—";
+          r.innerHTML = `<span class="nm">${li.sub && !li.tier ? "· " : ""}${li.name}</span><span class="px">${px}</span>`;
+          itemsEl.appendChild(r);
+        });
+
+        document.getElementById("rcptSubtotal").textContent = fmt(subtotal());
+        document.getElementById("rcptService").textContent = fmt(service());
+        document.getElementById("rcptTotal").textContent = fmt(total());
+        document.getElementById("grandTotal").textContent =
+          total().toLocaleString("ko-KR");
+
+        // reset confirm
+        const cb = document.getElementById("confirmBtn");
+        cb.disabled = false;
+        cb.innerHTML = '<span class="corners"></span>Confirm Order';
+        document.querySelector(".receipt .stamp").textContent =
+          "Saloon · MDCCCXCVII";
+      }
+
+      function toRoman(num) {
+        if (num <= 0) return "";
+        const map = [
+          [1000, "M"],
+          [900, "CM"],
+          [500, "D"],
+          [400, "CD"],
+          [100, "C"],
+          [90, "XC"],
+          [50, "L"],
+          [40, "XL"],
+          [10, "X"],
+          [9, "IX"],
+          [5, "V"],
+          [4, "IV"],
+          [1, "I"],
+        ];
+        let r = "";
+        for (const [v, s] of map) {
+          while (num >= v) {
+            r += s;
+            num -= v;
+          }
+        }
+        return r;
+      }
+
+      /* ============================================================
+   Actions
+   ============================================================ */
+
+      function confirmOrder(btn) {
+        btn.disabled = true;
+        btn.innerHTML = '<span class="corners"></span>Sealed &amp; Signed ✓';
+        const stamp = document.querySelector(".receipt .stamp");
+        stamp.textContent = "Paid in full";
+        stamp.animate(
+          [
+            { transform: "rotate(14deg) scale(1.6)", opacity: 0 },
+            { transform: "rotate(14deg) scale(1)", opacity: 0.85 },
+          ],
+          {
+            duration: 500,
+            easing: "cubic-bezier(.2,.8,.2,1)",
+            fill: "forwards",
+          },
+        );
+      }
+
+      function restart() {
+        Object.assign(state, {
+          drink: null,
+          temperature: null,
+          beans: null,
+          water: null,
+          milk: null,
+          sugar: 0,
+          syrups: [],
+          topping: null,
+          vessel: null,
+          cookie: null,
+        });
+        document
+          .querySelectorAll(".card.selected")
+          .forEach((c) => c.classList.remove("selected"));
+        document
+          .querySelectorAll(".chip.on")
+          .forEach((c) => c.classList.remove("on"));
+        document
+          .querySelectorAll(".sugar-cube.on")
+          .forEach((c) => c.classList.remove("on"));
+        document.getElementById("sugarRead").textContent = sugarLabels[0];
+        goto(0, -1);
+      }
+
+      /* ============================================================
+   Keyboard
+   ============================================================ */
+
+      document.addEventListener("keydown", (e) => {
+        if (e.target.tagName === "INPUT") return;
+        if (e.key === "ArrowRight" || e.key === "Enter") {
+          e.preventDefault();
+          next();
+        }
+        if (e.key === "ArrowLeft") {
+          e.preventDefault();
+          prev();
+        }
+      });
+
+      let kbdHidden = false;
+      function hideHint() {
+        if (kbdHidden) return;
+        kbdHidden = true;
+        document.getElementById("kbdHint").style.transition = "opacity .8s";
+        document.getElementById("kbdHint").style.opacity = "0";
+      }
+      ["click", "keydown"].forEach((ev) =>
+        document.addEventListener(ev, hideHint, { once: true }),
+      );
+
+      /* ============================================================
+         Ambient audio — loops continuously, started on first gesture
+         ============================================================ */
+      (function () {
+        const audio = document.getElementById("ambientAudio");
+        const toggle = document.getElementById("audioToggle");
+        if (!audio || !toggle) return;
+
+        audio.loop = true;
+        audio.volume = 0.45;
+        let started = false;
+        let userMuted = false;
+
+        function setMutedUI(muted) {
+          toggle.classList.toggle("muted", muted);
+          toggle.setAttribute(
+            "aria-label",
+            muted ? "Un-mute ambient music" : "Mute ambient music",
+          );
+        }
+
+        function start() {
+          if (started) return;
+          audio.muted = false;
+          const p = audio.play();
+          if (p && typeof p.then === "function") {
+            p.then(() => {
+              started = true;
+              userMuted = false;
+              toggle.classList.remove("pending");
+              setMutedUI(false);
+            }).catch(() => {
+              /* will retry on next gesture */
+            });
+          } else {
+            started = true;
+            toggle.classList.remove("pending");
+            setMutedUI(false);
+          }
+        }
+
+        // Attempt autoplay (browsers will likely block until gesture).
+        audio.muted = true;
+        audio.play().catch(() => {});
+
+        // Start on first user gesture anywhere on the page.
+        function firstGesture() {
+          if (!userMuted) start();
+          window.removeEventListener("pointerdown", firstGesture, true);
+          window.removeEventListener("keydown", firstGesture, true);
+          window.removeEventListener("touchstart", firstGesture, true);
+        }
+        window.addEventListener("pointerdown", firstGesture, true);
+        window.addEventListener("keydown", firstGesture, true);
+        window.addEventListener("touchstart", firstGesture, true);
+
+        // Manual toggle.
+        toggle.addEventListener("click", (e) => {
+          e.stopPropagation();
+          if (!started) {
+            start();
+            return;
+          }
+          if (audio.paused || audio.muted) {
+            audio.muted = false;
+            audio.play().catch(() => {});
+            userMuted = false;
+            setMutedUI(false);
+          } else {
+            audio.pause();
+            userMuted = true;
+            setMutedUI(true);
+          }
+        });
+
+        // Keep playing if focus returns / tab becomes visible.
+        document.addEventListener("visibilitychange", () => {
+          if (!document.hidden && started && !userMuted && audio.paused) {
+            audio.play().catch(() => {});
+          }
+        });
+
+        // Safety: if the file ever ends (loop should prevent it), restart.
+        audio.addEventListener("ended", () => {
+          if (!userMuted) {
+            audio.currentTime = 0;
+            audio.play().catch(() => {});
+          }
+        });
+      })();
+
+      syncChrome();
+    </script>
+  </body>
+</html>
